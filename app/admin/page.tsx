@@ -67,8 +67,7 @@ export default function AdminPage() {
   }
 
   const handleGenerateApiKey = async () => {
-    const selectedData = csvData.filter((_, index) => selectedItems[index])
-    const newApiKey = await generateApiKey(selectedData)
+    const newApiKey = await generateApiKey()
     setApiKey(newApiKey)
   }
 
