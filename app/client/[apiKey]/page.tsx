@@ -28,7 +28,11 @@ const mockClients = [
     },
 ]
 
-export default function ClientPage({ params }: { params: { apiKey: string } }) {
+type ClientPageProps = {
+    params: { apiKey: string }
+}
+
+export default function ClientPage({ params }: ClientPageProps) {
     const [clientData, setClientData] = useState<(typeof mockClients)[0] | null>(null)
 
     useEffect(() => {
