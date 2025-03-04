@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import {useParams} from "next/navigation";
 
 // Mock data
 const mockClients = [
@@ -28,11 +29,9 @@ const mockClients = [
     },
 ]
 
-type ClientPageProps = {
-    params: { apiKey: string }
-}
+export default async function ClientPage() {
+    const params = useParams<{ apiKey: string }>();
 
-export default async function ClientPage({ params }: ClientPageProps) {
     const [clientData, setClientData] = useState<(typeof mockClients)[0] | null>(null)
 
     useEffect(() => {
