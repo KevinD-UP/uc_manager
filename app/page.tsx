@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-8">Welcome to My App</h1>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <Link href="/client/demo-api-key">
+          <Link href="/client/">
             <Button size="lg" className="w-full">
               Client Area
             </Button>

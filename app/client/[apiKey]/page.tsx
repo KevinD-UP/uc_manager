@@ -29,7 +29,7 @@ const mockClients = [
     },
 ]
 
-export default async function ClientPage() {
+export default function ClientPage() {
     const params = useParams<{ apiKey: string }>();
 
     const [clientData, setClientData] = useState<(typeof mockClients)[0] | null>(null)
