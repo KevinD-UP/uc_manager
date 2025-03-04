@@ -14,7 +14,7 @@ export default function Home() {
             </Button>
           </Link>
 
-          <Link href="/admin">
+          <Link href="/admin/create/">
             <Button size="lg" variant="outline" className="w-full">
               Admin Dashboard
             </Button>
