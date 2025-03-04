@@ -12,7 +12,4 @@ export async function generateApiKey(length = 32): Promise<string> {
   return apiKey.match(/.{1,4}/g)?.join('-') || apiKey;
 }
 
-// Exemple d'utilisation
-console.log(generateApiKey());
-
 

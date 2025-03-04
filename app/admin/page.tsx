@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 
 export default function AdminPage() {
   const [csvData, setCsvData] = useState<any[]>([])
+  const [filteredIsinData, setFilteredIsinData] = useState<any[]>([])
   const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [apiKey, setApiKey] = useState<string | null>(null)
@@ -32,8 +33,19 @@ export default function AdminPage() {
 
       setCsvData(result as any[])
 
-      const initialSelectedState: Record<string, boolean> = {};
-      (result as any[]).forEach((_: any, index: number) => {
+      const filteredIsin = (result as any[]).map(row =>
+          Object.keys(row)
+              .filter(key => key.includes("ISIN"))
+              .reduce((acc, key) => {
+                acc[key] = row[key]
+                return acc
+              }, {} as Record<string, any>)
+      )
+
+      setFilteredIsinData(filteredIsin)
+
+      const initialSelectedState: Record<string, boolean> = {}
+      filteredIsin.forEach((_, index) => {
         initialSelectedState[index] = true
       })
       setSelectedItems(initialSelectedState)
@@ -43,6 +55,7 @@ export default function AdminPage() {
       setIsLoading(false)
     }
   }
+
 
   const toggleItem = (index: string) => {
     setSelectedItems((prev) => ({
