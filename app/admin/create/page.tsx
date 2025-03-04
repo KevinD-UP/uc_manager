@@ -18,7 +18,7 @@ export default function AdminCreatePage() {
   const [clientName, setClientName] = useState("")
   const [selectedPlan, setSelectedPlan] = useState("")
   const [csvData, setCsvData] = useState<any[]>([])
-  const [filteredCsvData, setFilteredCsvData] = useState<any[]>([]) // Ajout d'un état pour stocker les données filtrées
+  const [filteredCsvData, setFilteredCsvData] = useState<any[]>([])
   const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [apiKey, setApiKey] = useState<string | null>(null)
@@ -29,7 +29,7 @@ export default function AdminCreatePage() {
     if (!file) return
 
     setIsLoading(true)
-    setApiKey(null) // Reset API key when new file is uploaded
+    setApiKey(null)
 
     try {
       const text = await file.text()
@@ -37,17 +37,19 @@ export default function AdminCreatePage() {
 
       setCsvData(result as any[])
 
-      // Filtrer uniquement les colonnes contenant "ISIN"
-      const filteredData = (result as any[]).map(row =>
+      const filteredData = (result as any[]).map((row) =>
           Object.keys(row)
-              .filter(key => key.includes("ISIN"))
-              .reduce((acc, key) => {
-                acc[key] = row[key]
-                return acc
-              }, {} as Record<string, any>)
+              .filter((key) => key.includes("ISIN"))
+              .reduce(
+                  (acc, key) => {
+                    acc[key] = row[key]
+                    return acc
+                  },
+                  {} as Record<string, any>,
+              ),
       )
 
-      setFilteredCsvData(filteredData) // Stocke les données filtrées
+      setFilteredCsvData(filteredData)
 
       const initialSelectedState: Record<string, boolean> = {}
       filteredData.forEach((_, index) => {
@@ -88,17 +90,32 @@ export default function AdminCreatePage() {
       alert("Please enter a client name and select a plan before generating an API key.")
       return
     }
-    const selectedData = csvData.filter((_, index) => selectedItems[index])
+
     const newApiKey = await generateApiKey()
     setApiKey(newApiKey)
+
+    // Create an object with all the required information
+    const selectedIsinCodes = filteredCsvData
+        .filter((_, index) => selectedItems[index])
+        .flatMap((row) => Object.values(row))
+
+    const clientData = {
+      clientName,
+      selectedPlan,
+      isinCodes: selectedIsinCodes,
+      apiKey: newApiKey,
+    }
+
+    // Log the object
+    console.log("Client Data to be inserted into database:", clientData)
   }
 
   return (
       <main className="flex min-h-screen flex-col items-center p-8">
-        <div className="w-full max-w-7xl">
+        <div className="w-full max-w-7xl flex flex-col h-[calc(100vh-4rem)]">
           <h1 className="text-3xl font-bold mb-6">Create New Client</h1>
 
-          <Card className="p-6 mb-8 h-[calc(100vh-12rem)]">
+          <Card className="p-6 mb-8 flex flex-col flex-grow overflow-hidden">
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
                 <Label htmlFor="clientName">Client Name</Label>
@@ -138,7 +155,7 @@ export default function AdminCreatePage() {
             </div>
 
             {csvData.length > 0 && (
-                <div>
+                <div className="flex flex-col flex-grow overflow-hidden">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-medium">CSV Data</h3>
                     <div className="flex items-center gap-4">
@@ -152,7 +169,7 @@ export default function AdminCreatePage() {
                     </div>
                   </div>
 
-                  <div className="border rounded-md overflow-hidden mb-6 h-[calc(100%-18rem)]">
+                  <div className="border rounded-md overflow-hidden flex-grow">
                     <div className="h-full overflow-y-auto">
                       <table className="w-full">
                         <thead className="bg-muted sticky top-0">
@@ -209,8 +226,8 @@ export default function AdminCreatePage() {
             )}
           </Card>
 
-          <div className="flex justify-center mt-8">
-            <Link href="/admin">
+          <div className="mt-4">
+            <Link href="/admin/">
               <Button variant="outline">Back to Admin Dashboard</Button>
             </Link>
           </div>
